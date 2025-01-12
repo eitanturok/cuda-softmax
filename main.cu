@@ -46,7 +46,7 @@ __global__ void softmax_kernel_0(float* xd, float* resd, int M, int N) {
 
     int index = blockIdx.x * blockDim.x + threadIdx.x;
     int stride = blockDim.x * gridDim.x;
-    printf("index=%d -> blockid=%d blockdim=%d threadidx%d\n", index, blockIdx.x, blockDim.x, threadIdx.x);
+    printf("index=%d -> blockid=%d blockdim=%d threadidx=%d\n", index, blockIdx.x, blockDim.x, threadIdx.x);
 
     // float normalizer = 0;
     for (int i = index; i < M; i += stride){
