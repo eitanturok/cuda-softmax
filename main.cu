@@ -29,8 +29,31 @@ since we aren't exploiting parallelism capabilities of GPUs that much.
 We are only parallelizing over the rows.
 */
 __global__ void softmax_kernel_0(float* xd, float* resd, int M, int N) {
-}
+    /*
+    xd (float*):
+        The data over which we compute the softmax.
+        This is a 1D array of length M * N * sizeof(float).
+        We add the d to x, i.e. xd to indicate this variable was allocated on the device.
+    resd (float*)
+        The array where we store the result.
+        This is a 1D array of length M * N * sizeof(float).
+        We add the d to res, i.e. resd to indicate this variable was allocated on the device.
+    M (int):
+        The number of rows.
+    N (int):
+        The number of columns.
+    */
 
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
+    int stride = blockDim.x * gridDim.x;
+    printf("index=%d -> blockid=%d blockdim=%d threadidx%d\n", index, blockIdx.x, blockDim.x, threadIdx.x);
+
+    float normalizer = 0;
+    for (int i = index; i < M; i += stride){
+        normalizer += expf(xd[i]);
+    }
+    printf("normalizer=%d\n", normalizer);
+}
 
 /*
 This kernel implements an online softmax operation on a matrix of size (M, N).
@@ -88,8 +111,10 @@ float random_normal_clamped(float min, float max) {
 }
 
 int main() {
-    int M = 1024;
-    int N = 32768;
+    // int M = 1024;
+    // int N = 32768;
+    int M = 4;
+    int N = 8;
     int matsize = M * N;
     int totalsize = matsize * sizeof(float);
 
@@ -97,12 +122,13 @@ int main() {
     float* mat = (float*)malloc(totalsize);
     float* res = (float*)malloc(totalsize);
     for (int i = 0; i < matsize; i++) {
-        mat[i] = random_normal_clamped(-10, 10);
+        // mat[i] = random_normal_clamped(-10, 10);
+        mat[i] = i;
     }
 
     // arrays to allocate on device ends with 'd'
     float *xd, *resd;
-    dim3 block_size(1024);
+    dim3 block_size(2);
     dim3 grid_size(CEIL_DIV(M, block_size.x));
 
     // below code calculates the time elapsed for

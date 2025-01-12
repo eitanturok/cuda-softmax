@@ -39,7 +39,7 @@ def cuda_image():
 
 # 3 minutes warmpup
 @app.function(
-    gpu=gpu.A100(),
+    gpu=gpu.T4(), # cheapest GPU at $0.000164 / sec
     image=cuda_image(),
     mounts=cuda_mount(),
 )

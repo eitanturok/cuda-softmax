@@ -1,10 +1,6 @@
 # About
 
-Implement more and more optimized softmax kernels in cuda.
-
-Run with Modal.
-
-Taken from: https://github.com/Maharshi-Pandya/cudacodes/tree/master.
+Implement more and more optimized softmax kernels in cuda. Powered by Modal. Taken from [Maharshi](https://github.com/Maharshi-Pandya/cudacodes/tree/master).
 
 # Run it
 
