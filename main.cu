@@ -48,11 +48,12 @@ __global__ void softmax_kernel_0(float* xd, float* resd, int M, int N) {
     int stride = blockDim.x * gridDim.x;
     printf("index=%d -> blockid=%d blockdim=%d threadidx%d\n", index, blockIdx.x, blockDim.x, threadIdx.x);
 
-    float normalizer = 0;
+    // float normalizer = 0;
     for (int i = index; i < M; i += stride){
-        normalizer += expf(xd[i]);
+        printf("%d\n", xd[i]);
+        // normalizer += expf(xd[i]);
     }
-    printf("normalizer=%d\n", normalizer);
+    // printf("normalizer=%d\n", normalizer);
 }
 
 /*
@@ -124,6 +125,7 @@ int main() {
     for (int i = 0; i < matsize; i++) {
         // mat[i] = random_normal_clamped(-10, 10);
         mat[i] = i;
+        printf("mat[i]=%f\n", mat[i]);
     }
 
     // arrays to allocate on device ends with 'd'
